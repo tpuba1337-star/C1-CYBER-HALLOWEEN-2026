@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber-Gothic Halloween 2026: C1 English Mastery</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            halloween: {
+              black: '#08070d',
+              dark: '#110f1d',
+              card: 'rgba(21, 18, 38, 0.8)',
+              orange: '#FF6B00',
+              purple: '#9d4edd',
+              green: '#00ff88',
+              glow: '#ff8800'
+            }
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 2s infinite alternate',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            pulseGlow: {
+              '0%': { boxShadow: '0 0 15px rgba(255, 107, 0, 0.4)' },
+              '100%': { boxShadow: '0 0 30px rgba(157, 78, 221, 0.8)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Canvas Confetti -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Creepster&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #08070d;
+      color: #f3f4f6;
+      overflow-x: hidden;
+    }
+
+    .font-spooky {
+      font-family: 'Creepster', cursive;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08070d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3c1361;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF6B00;
+    }
+
+    /* Glassmorphism style */
+    .glass-card {
+      background: rgba(21, 18, 38, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(157, 78, 221, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    /* Floating particles canvas background */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 3D Flip Card Styles */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-halloween-orange selection:text-black relative">
+
+  <!-- Background Canvas for Glowing Halloween Particles -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Ambient Glow Backgrounds -->
+  <div class="fixed top-1/4 left-10 w-96 h-96 bg-halloween-purple/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="fixed bottom-1/4 right-10 w-96 h-96 bg-halloween-orange/15 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- Header Navigation & Live XP Dashboard -->
+  <header class="relative z-20 border-b border-purple-900/40 glass-card sticky top-0 px-4 py-3 sm:px-8">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-halloween-orange to-halloween-purple flex items-center justify-center text-2xl shadow-lg shadow-halloween-orange/20 animate-pulse">
+          🎃
+        </div>
+        <div>
+          <h1 class="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-halloween-orange via-purple-300 to-halloween-green tracking-wide">
+            C1 CYBER-HALLOWEEN 2026
+          </h1>
+          <p class="text-xs text-purple-300/70 font-medium">10-Module Advanced Proficiency Arena</p>
+        </div>
+      </div>
+
+      <!-- Controls & Progress Tracker -->
+      <div class="flex items-center gap-4 sm:gap-6">
+        <!-- SFX Toggle -->
+        <button id="sound-toggle-btn" class="p-2.5 rounded-xl glass-card text-purple-300 hover:text-halloween-orange hover:border-halloween-orange transition-all flex items-center gap-2 text-sm font-semibold">
+          <span id="sound-icon">🔊</span>
+          <span class="hidden sm:inline" id="sound-text">SFX: ON</span>
+        </button>
+
+        <!-- XP Badge -->
+        <div class="flex items-center gap-3 glass-card px-4 py-2 rounded-xl border border-purple-500/30">
+          <div class="text-right">
+            <div class="text-xs uppercase tracking-wider text-gray-400 font-semibold">Score</div>
+            <div class="text-sm font-extrabold text-halloween-orange" id="xp-counter">0 / 1000 XP</div>
+          </div>
+          <div class="w-12 h-12 relative flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-gray-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path id="progress-circle" class="text-halloween-orange transition-all duration-500 stroke-current" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <span class="absolute text-xs font-bold text-white" id="progress-percent">0%</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content Body -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 sm:px-8 w-full grow flex flex-col gap-8">
+    
+    <!-- Hero Banner -->
+    <section class="glass-card rounded-3xl p-6 sm:p-8 border border-halloween-purple/30 relative overflow-hidden">
+      <div class="max-w-3xl space-y-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-halloween-orange/10 border border-halloween-orange/30 text-halloween-orange text-xs font-bold uppercase tracking-widest">
+          <span class="w-2 h-2 rounded-full bg-halloween-orange animate-ping"></span>
+          C1 Proficiency Mastery Track • 10 Interactive Modules
+        </div>
+        <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+          Welcome to the <span class="text-transparent bg-clip-text bg-gradient-to-r from-halloween-orange to-purple-400 font-spooky text-3xl sm:text-5xl">Cyber-Gothic Realm</span>
+        </h2>
+        <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+          Master advanced C1 idioms, complex inversion, subjunctive clauses, error correction, audio distinctions, and ethical debate. Complete all 10 modules (50+ items) to unlock the ultimate Halloween vault.
+        </p>
+      </div>
+    </section>
+
+    <!-- Scrollable Module Tabs Bar -->
+    <div class="overflow-x-auto pb-2 flex gap-2 border-b border-purple-900/50 no-scrollbar" id="module-tabs">
+      <button onclick="switchModule(1)" id="tab-mod1" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all bg-halloween-orange text-black shadow-lg shadow-halloween-orange/30">
+        1. Macabre Idioms
+      </button>
+      <button onclick="switchModule(2)" id="tab-mod2" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        2. High Inversion
+      </button>
+      <button onclick="switchModule(3)" id="tab-mod3" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        3. Cyber Cloze
+      </button>
+      <button onclick="switchModule(4)" id="tab-mod4" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        4. Collocations
+      </button>
+      <button onclick="switchModule(5)" id="tab-mod5" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        5. Error Correction
+      </button>
+      <button onclick="switchModule(6)" id="tab-mod6" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        6. Subjunctive & Cleft
+      </button>
+      <button onclick="switchModule(7)" id="tab-mod7" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        7. Cryptic Riddles
+      </button>
+      <button onclick="switchModule(8)" id="tab-mod8" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        8. Audio Nuance
+      </button>
+      <button onclick="switchModule(9)" id="tab-mod9" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        9. Debate Cards
+      </button>
+      <button onclick="switchModule(10)" id="tab-mod10" class="mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white">
+        10. Crossword Grid
+      </button>
+    </div>
+
+    <!-- MODULE 1: MACABRE IDIOMS & PHRASAL VERBS (7 ITEMS) -->
+    <section id="module1" class="module-content space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-orange">Module 1:</span> Macabre Idioms & Phrasal Verbs (7 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Match each advanced C1 idiom or spooky expression with its precise meaning.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3" id="mod1-terms"></div>
+        <div class="space-y-3" id="mod1-defs"></div>
+      </div>
+    </section>
+
+    <!-- MODULE 2: HIGH-LEVEL INVERSION MASTERY (6 ITEMS) -->
+    <section id="module2" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-purple">Module 2:</span> High-Level Inversion Mastery (6 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Complete the inverted sentences by providing the exact grammatical auxiliary and subject structure.</p>
+      </div>
+      <div class="space-y-6" id="mod2-container"></div>
+    </section>
+
+    <!-- MODULE 3: THE CYBER-GOTHIC READ & CLOZE (6 ITEMS) -->
+    <section id="module3" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-green">Module 3:</span> Cyber-Gothic Reading Cloze (6 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Read the 2026 futuristic short story and select the best C1 lexical option for each gap.</p>
+      </div>
+      <div class="glass-card p-6 sm:p-8 rounded-2xl border border-purple-500/30 space-y-6 leading-relaxed text-gray-200 text-sm sm:text-base" id="mod3-story"></div>
+    </section>
+
+    <!-- MODULE 4: ADVANCED COLLOCATIONS (6 ITEMS) -->
+    <section id="module4" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-orange">Module 4:</span> Advanced Collocations & Nuanced Vocabulary (6 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Choose the exact C1 natural adjective or noun to complete each high-register collocation.</p>
+      </div>
+      <div class="space-y-6" id="mod4-container"></div>
+    </section>
+
+    <!-- MODULE 5: ERROR IDENTIFICATION & CORRECTION (6 ITEMS) -->
+    <section id="module5" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-purple">Module 5:</span> Error Identification & Correction (6 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Each sentence contains one subtle C1 grammatical error. Type the corrected version of the erroneous phrase.</p>
+      </div>
+      <div class="space-y-6" id="mod5-container"></div>
+    </section>
+
+    <!-- MODULE 6: SUBJUNCTIVE MOOD & CLEFT SENTENCES (6 ITEMS) -->
+    <section id="module6" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-green">Module 6:</span> Subjunctive Mood & Cleft Sentences (6 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Transform clauses into formal subjunctive mood or cleft structure emphasis.</p>
+      </div>
+      <div class="space-y-6" id="mod6-container"></div>
+    </section>
+
+    <!-- MODULE 7: CRYPTIC LEXICAL RIDDLES (5 ITEMS) -->
+    <section id="module7" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-orange">Module 7:</span> Cryptic Lexical Riddles (5 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Decrypt terminal riddles by entering the exact C1 vocabulary target word.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="mod7-container"></div>
+    </section>
+
+    <!-- MODULE 8: AUDITORY DISTINCTIONS & PHONETICS (5 ITEMS) -->
+    <section id="module8" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-purple">Module 8:</span> Auditory Distinctions & Stress Nuances (5 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Play the audio synthesizer tones/sequences and answer phonetic stress or subtle contextual distinction questions.</p>
+      </div>
+      <div class="space-y-6" id="mod8-container"></div>
+    </section>
+
+    <!-- MODULE 9: ETHICAL DEBATE CARDS (5 ITEMS) -->
+    <section id="module9" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20 flex flex-wrap justify-between items-center gap-4">
+        <div>
+          <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+            <span class="text-halloween-green">Module 9:</span> 2026 Ethical Debate Flip Cards (5 Items)
+          </h3>
+          <p class="text-gray-300 text-sm mt-1">Flip cards to analyze complex futuristic dilemmas. Practice speaking with the integrated timer and C1 linking phrases.</p>
+        </div>
+
+        <div class="glass-card p-4 rounded-xl border border-halloween-orange/40 flex items-center gap-4">
+          <div class="text-center">
+            <div class="text-xs uppercase text-gray-400 font-bold">Timer</div>
+            <div id="timer-display" class="text-2xl font-mono font-bold text-halloween-orange">02:00</div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="startTimer()" class="px-3 py-1.5 bg-halloween-orange text-black font-bold text-xs rounded-lg hover:bg-orange-400 transition">Start</button>
+            <button onclick="resetTimer()" class="px-3 py-1.5 bg-gray-800 text-white font-bold text-xs rounded-lg hover:bg-gray-700 transition">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Discourse Markers Reference -->
+      <div class="glass-card p-4 rounded-xl border border-purple-500/20">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-halloween-purple mb-2">C1 Linking Phrases Cheat Sheet:</h4>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <span class="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-200">Notwithstanding the fact that...</span>
+          <span class="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-200">Be that as it may...</span>
+          <span class="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-200">It is worth bearing in mind that...</span>
+          <span class="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-200">Conversely...</span>
+          <span class="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-200">On the flip side of the coin...</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="mod9-container"></div>
+    </section>
+
+    <!-- MODULE 10: HALLOWEEN C1 CROSSWORD PUZZLE (6 CLUES) -->
+    <section id="module10" class="module-content hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+          <span class="text-halloween-orange">Module 10:</span> Cyber-Gothic Lexical Crossword (6 Items)
+        </h3>
+        <p class="text-gray-300 text-sm mt-1">Read the C1 clues and type the target vocabulary words into the interactive grid matrix.</p>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start" id="mod10-container"></div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-purple-900/40 glass-card mt-12 py-6 px-4 text-center text-xs text-gray-400">
+    <p>© 2026 Cyber-Gothic C1 English Proficiency Track. Designed for Advanced Learners.</p>
+  </footer>
+
+  <!-- CONGRATULATIONS MODAL -->
+  <div id="congrats-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-500">
+    <div class="glass-card max-w-lg w-full p-8 rounded-3xl border-2 border-halloween-orange text-center space-y-6 transform scale-90 transition-all duration-500" id="modal-card">
+      <div class="text-6xl animate-bounce">🎃🏆</div>
+      <h2 class="text-3xl font-extrabold text-white font-spooky">Cyber-Halloween Vault Mastered!</h2>
+      <p class="text-gray-300 text-sm leading-relaxed">
+        Sensational work! You have completed all 10 modules and demonstrated C1 Advanced English mastery across idioms, inversion, error correction, and debate.
+      </p>
+      <div class="p-4 rounded-xl bg-purple-900/30 border border-purple-500/30">
+        <div class="text-xs uppercase text-purple-300">Final Achievement</div>
+        <div class="text-3xl font-black text-halloween-orange">1000 / 1000 XP</div>
+      </div>
+      <button onclick="closeModal()" class="w-full py-3.5 bg-gradient-to-r from-halloween-orange to-halloween-purple text-white font-bold rounded-xl shadow-lg shadow-halloween-orange/40 hover:opacity-90 transition">
+        Claim C1 Certificate
+      </button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    /* ==========================================================================
+       WEB AUDIO SYNTHESIZER
+       ========================================================================== */
+    let soundEnabled = true;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioCtx();
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'success') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'error') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.linearRampToValueAtTime(120, now + 0.2);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'audioTone1') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(600, now + 0.4);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        } else if (type === 'audioTone2') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.linearRampToValueAtTime(100, now + 0.5);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        }
+      } catch (e) {
+        console.log('Audio playback constrained');
+      }
+    }
+
+    document.getElementById('sound-toggle-btn').addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
+      document.getElementById('sound-text').textContent = soundEnabled ? 'SFX: ON' : 'SFX: OFF';
+      if (soundEnabled) playSound('click');
+    });
+
+    /* ==========================================================================
+       GLOBAL STATE & PROGRESS MANAGEMENT
+       ========================================================================== */
+    const state = {
+      xp: 0,
+      maxXP: 1000,
+      completedModules: new Set()
+    };
+
+    function addXP(amount, moduleId) {
+      if (!state.completedModules.has(moduleId)) {
+        state.completedModules.add(moduleId);
+        state.xp = Math.min(state.maxXP, state.xp + amount);
+        updateProgressUI();
+        if (state.xp >= state.maxXP) {
+          triggerVictory();
+        }
+      }
+    }
+
+    function updateProgressUI() {
+      document.getElementById('xp-counter').textContent = `${state.xp} / ${state.maxXP} XP`;
+      const percentage = Math.round((state.xp / state.maxXP) * 100);
+      document.getElementById('progress-percent').textContent = `${percentage}%`;
+      const circle = document.getElementById('progress-circle');
+      circle.setAttribute('stroke-dasharray', `${percentage}, 100`);
+    }
+
+    function switchModule(modId) {
+      playSound('click');
+      document.querySelectorAll('.module-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`module${modId}`).classList.remove('hidden');
+
+      document.querySelectorAll('.mod-tab').forEach(btn => {
+        btn.className = 'mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all glass-card text-gray-300 hover:text-white';
+      });
+
+      const activeBtn = document.getElementById(`tab-mod${modId}`);
+      activeBtn.className = 'mod-tab whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all bg-halloween-orange text-black shadow-lg shadow-halloween-orange/30';
+    }
+
+    /* ==========================================================================
+       MODULE 1: MACABRE IDIOMS (7 ITEMS)
+       ========================================================================== */
+    const mod1Data = [
+      { id: 'm1_1', term: 'Skeleton in the closet', def: 'A discreditable or embarrassing secret stored away from public view.' },
+      { id: 'm1_2', term: 'Dig one\'s own grave', def: 'To behave in a way that will inevitably cause one\'s own ruin or failure.' },
+      { id: 'm1_3', term: 'Whistle in the dark', def: 'To display artificial courage or optimism in the face of fear or danger.' },
+      { id: 'm1_4', term: 'Blood is thicker than water', def: 'Family relationships and ties are stronger than any other bonds.' },
+      { id: 'm1_5', term: 'Witch hunt', def: 'A deliberate campaign targeting people who hold unorthodox or unpopular views.' },
+      { id: 'm1_6', term: 'Jump out of one\'s skin', def: 'To be suddenly overwhelmed by severe shock or sudden startle.' },
+      { id: 'm1_7', term: 'Ghost someone', def: 'To abruptly sever all communication with someone without explanation.' }
+    ];
+
+    let mod1TermSel = null;
+    let mod1DefSel = null;
+    let mod1Matches = 0;
+
+    function initModule1() {
+      const termsContainer = document.getElementById('mod1-terms');
+      const defsContainer = document.getElementById('mod1-defs');
+
+      const shuffledDefs = [...mod1Data].sort(() => Math.random() - 0.5);
+
+      termsContainer.innerHTML = '<h4 class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">C1 Macabre Phrase</h4>';
+      defsContainer.innerHTML = '<h4 class="text-xs font-bold uppercase tracking-wider text-halloween-orange mb-2">Precise Meaning</h4>';
+
+      mod1Data.forEach(item => {
+        const btn = document.createElement('button');
+        btn.dataset.id = item.id;
+        btn.className = 'm1-term w-full text-left p-3.5 rounded-xl glass-card border border-purple-500/20 hover:border-purple-400 transition font-bold text-xs sm:text-sm text-gray-200 flex justify-between items-center';
+        btn.innerHTML = `<span>${item.term}</span> <span class="indicator text-xs text-purple-400">👉</span>`;
+        btn.onclick = () => {
+          playSound('click');
+          document.querySelectorAll('.m1-term').forEach(b => { if(!b.classList.contains('matched')) b.classList.remove('border-halloween-orange', 'bg-halloween-orange/20'); });
+          mod1TermSel = { btn, id: item.id };
+          btn.classList.add('border-halloween-orange', 'bg-halloween-orange/20');
+          checkMod1();
+        };
+        termsContainer.appendChild(btn);
+      });
+
+      shuffledDefs.forEach(item => {
+        const btn = document.createElement('button');
+        btn.dataset.id = item.id;
+        btn.className = 'm1-def w-full text-left p-3.5 rounded-xl glass-card border border-orange-500/20 hover:border-halloween-orange transition text-xs sm:text-sm text-gray-300';
+        btn.textContent = item.def;
+        btn.onclick = () => {
+          playSound('click');
+          document.querySelectorAll('.m1-def').forEach(b => { if(!b.classList.contains('matched')) b.classList.remove('border-halloween-purple', 'bg-halloween-purple/20'); });
+          mod1DefSel = { btn, id: item.id };
+          btn.classList.add('border-halloween-purple', 'bg-halloween-purple/20');
+          checkMod1();
+        };
+        defsContainer.appendChild(btn);
+      });
+    }
+
+    function checkMod1() {
+      if (mod1TermSel && mod1DefSel) {
+        if (mod1TermSel.id === mod1DefSel.id) {
+          playSound('success');
+          mod1TermSel.btn.className = 'w-full text-left p-3.5 rounded-xl glass-card border-2 border-halloween-green bg-halloween-green/10 text-halloween-green font-bold text-xs sm:text-sm matched flex justify-between items-center cursor-default';
+          mod1TermSel.btn.querySelector('.indicator').textContent = '✓';
+          mod1DefSel.btn.className = 'w-full text-left p-3.5 rounded-xl glass-card border-2 border-halloween-green bg-halloween-green/10 text-halloween-green text-xs sm:text-sm matched cursor-default';
+          
+          mod1TermSel = null;
+          mod1DefSel = null;
+          mod1Matches++;
+
+          if (mod1Matches === mod1Data.length) {
+            addXP(100, 'mod1');
+          }
+        } else {
+          playSound('error');
+          const t = mod1TermSel.btn;
+          const d = mod1DefSel.btn;
+          t.classList.add('border-red-500', 'bg-red-500/20');
+          d.classList.add('border-red-500', 'bg-red-500/20');
+          setTimeout(() => {
+            if(!t.classList.contains('matched')) t.classList.remove('border-red-500', 'bg-red-500/20', 'border-halloween-orange', 'bg-halloween-orange/20');
+            if(!d.classList.contains('matched')) d.classList.remove('border-red-500', 'bg-red-500/20', 'border-halloween-purple', 'bg-halloween-purple/20');
+          }, 600);
+          mod1TermSel = null;
+          mod1DefSel = null;
+        }
+      }
+    }
+
+    /* ==========================================================================
+       MODULE 2: HIGH-LEVEL INVERSION MASTERY (6 ITEMS)
+       ========================================================================== */
+    const mod2Data = [
+      { id: 1, orig: "We seldom witness such sophisticated AI cyber-spooks in modern lore.", prefix: "Seldom ", suffix: " such sophisticated AI cyber-spooks in modern lore.", ans: "do we witness", exp: "Seldom + present simple inverted auxiliary 'do we witness'." },
+      { id: 2, orig: "The neural spectral grid failed immediately after the clock struck midnight.", prefix: "Scarcely ", suffix: " midnight when the neural spectral grid collapsed.", ans: "had the clock struck", exp: "Scarcely + past perfect inversion 'had the clock struck'." },
+      { id: 3, orig: "Cyber-investigators little realized what gruesome digital anomalies awaited them.", prefix: "Little ", suffix: " what gruesome digital anomalies awaited them in the crypt.", ans: "did cyber-investigators realize", exp: "Little + past simple inverted auxiliary 'did... realize'." },
+      { id: 4, orig: "Users should never enter the encrypted catacombs without biometric protection.", prefix: "On no account ", suffix: " enter the encrypted catacombs without biometric protection.", ans: "should users", exp: "On no account + modal inversion 'should users'." },
+      { id: 5, orig: "We only discovered the phantom protocol when the server rebooted.", prefix: "Only when the server rebooted ", suffix: " the phantom protocol.", ans: "did we discover", exp: "Only when [clause] + inverted main clause 'did we discover'." },
+      { id: 6, orig: "The team had never before encountered such malicious spectral code.", prefix: "Never before ", suffix: " encountered such malicious spectral code.", ans: "had the team", exp: "Never before + past perfect auxiliary 'had the team'." }
+    ];
+
+    let mod2Solved = 0;
+
+    function initModule2() {
+      const container = document.getElementById('mod2-container');
+      container.innerHTML = '';
+
+      mod2Data.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-6 rounded-2xl border border-purple-500/20 space-y-3';
+        card.innerHTML = `
+          <div class="text-xs font-semibold text-purple-300 uppercase tracking-widest">Item ${index + 1} of 6</div>
+          <p class="text-xs italic text-gray-400">Original: "${item.orig}"</p>
+          <div class="flex flex-wrap items-center gap-2 text-sm font-bold text-white">
+            <span>${item.prefix}</span>
+            <input type="text" id="mod2-in-${index}" class="px-3 py-1.5 rounded-lg bg-black/60 border border-purple-500/40 text-halloween-orange font-mono text-sm focus:outline-none focus:border-halloween-orange w-64" placeholder="Type inversion...">
+            <span>${item.suffix}</span>
+          </div>
+          <div class="flex items-center gap-3 pt-2">
+            <button onclick="checkMod2(${index})" class="px-4 py-2 bg-halloween-purple text-white text-xs font-bold rounded-lg hover:bg-purple-600 transition">Check</button>
+            <div id="mod2-fb-${index}" class="text-xs font-bold"></div>
+          </div>
+          <div id="mod2-exp-${index}" class="hidden p-2.5 rounded-lg bg-purple-900/30 text-xs text-purple-200">
+            <strong>Grammar Note:</strong> ${item.exp}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function checkMod2(idx) {
+      playSound('click');
+      const val = document.getElementById(`mod2-in-${idx}`).value.trim().toLowerCase();
+      const fb = document.getElementById(`mod2-fb-${idx}`);
+      const exp = document.getElementById(`mod2-exp-${idx}`);
+      const target = mod2Data[idx].ans.toLowerCase();
+
+      if (val === target) {
+        playSound('success');
+        fb.textContent = "CORRECT!";
+        fb.className = "text-xs font-bold text-halloween-green";
+        document.getElementById(`mod2-in-${idx}`).disabled = true;
+        exp.classList.remove('hidden');
+        mod2Solved++;
+        if (mod2Solved === mod2Data.length) addXP(100, 'mod2');
+      } else {
+        playSound('error');
+        fb.textContent = `INCORRECT. Target: "${mod2Data[idx].ans}"`;
+        fb.className = "text-xs font-bold text-red-400";
+        exp.classList.remove('hidden');
+      }
+    }
+
+    /* ==========================================================================
+       MODULE 3: CYBER-GOTHIC READING CLOZE (6 ITEMS)
+       ========================================================================== */
+    const mod3Gaps = [
+      { id: 1, options: ["uncanny", "casual", "mundane", "fragile"], ans: 0 },
+      { id: 2, options: ["lurking", "strolling", "soaring", "drifting"], ans: 0 },
+      { id: 3, options: ["macabre", "cheerful", "placid", "exuberant"], ans: 0 },
+      { id: 4, options: ["spine-chilling", "heart-warming", "mild", "soothing"], ans: 0 },
+      { id: 5, options: ["frightful", "joyous", "delightful", "festive"], ans: 0 },
+      { id: 6, options: ["annihilated", "welcomed", "honored", "restored"], ans: 0 }
+    ];
+
+    let mod3Score = 0;
+
+    function initModule3() {
+      const container = document.getElementById('mod3-story');
+      container.innerHTML = `
+        <p>
+          In the autumn of 2026, an 
+          <span class="inline-block my-1">${createSelect(0)}</span> 
+          quiet descended upon the AI-driven Blackwood Manor. Deep within its glowing server vaults, corrupted holograms were 
+          <span class="inline-block my-1">${createSelect(1)}</span> 
+          in the shadows, projecting 
+          <span class="inline-block my-1">${createSelect(2)}</span> 
+          images of forgotten code. 
+        </p>
+        <p>
+          A 
+          <span class="inline-block my-1">${createSelect(3)}</span> 
+          screech echoed through the bio-tech halls as the central core overloaded, triggering a 
+          <span class="inline-block my-1">${createSelect(4)}</span> 
+          malfunction. Only when the firewall was entirely 
+          <span class="inline-block my-1">${createSelect(5)}</span> 
+          did the spectral lockdown cease.
+        </p>
+      `;
+    }
+
+    function createSelect(idx) {
+      const opts = mod3Gaps[idx].options;
+      return `
+        <select id="mod3-sel-${idx}" onchange="checkMod3(${idx})" class="bg-black/70 border border-purple-500/50 text-halloween-orange text-xs sm:text-sm font-bold rounded-lg px-2 py-1 focus:outline-none">
+          <option value="">[Gap ${idx + 1}]</option>
+          ${opts.map((o, i) => `<option value="${i}">${o}</option>`).join('')}
+        </select>
+      `;
+    }
+
+    function checkMod3(idx) {
+      playSound('click');
+      const sel = document.getElementById(`mod3-sel-${idx}`);
+      const val = parseInt(sel.value);
+      if (val === mod3Gaps[idx].ans) {
+        playSound('success');
+        sel.className = "bg-halloween-green/20 border-2 border-halloween-green text-halloween-green text-xs sm:text-sm font-bold rounded-lg px-2 py-1";
+        mod3Score++;
+        if (mod3Score === mod3Gaps.length) addXP(100, 'mod3');
+      } else if (!isNaN(val)) {
+        playSound('error');
+        sel.className = "bg-red-500/20 border-2 border-red-500 text-red-200 text-xs sm:text-sm font-bold rounded-lg px-2 py-1";
+      }
+    }
+
+    /* ==========================================================================
+       MODULE 4: ADVANCED COLLOCATIONS (6 ITEMS)
+       ========================================================================== */
+    const mod4Data = [
+      { prompt: "The gothic cathedral was wrapped in a ______ silence.", opts: ["spine-chilling", "bone-breaking", "brain-freezing", "mind-stopping"], ans: 0 },
+      { prompt: "He bears an ______ resemblance to the 19th-century portrait.", opts: ["uncanny", "unreal", "unlikely", "untrue"], ans: 0 },
+      { prompt: "The detective refused to disclose the ______ details of the crime scene.", opts: ["grisly", "sticky", "clumsy", "greasy"], ans: 0 },
+      { prompt: "She confessed her dark secrets out of pure ______ curiosity.", opts: ["morbid", "mortal", "fatal", "decaying"], ans: 0 },
+      { prompt: "The tabloids published a ______ tale of spectral hauntings.", opts: ["lurid", "lucid", "luminous", "liquid"], ans: 0 },
+      { prompt: "The trapped system engineers experienced a ______ nightmare.", opts: ["frightful", "cheerful", "splendid", "graceful"], ans: 0 }
+    ];
+
+    let mod4Score = 0;
+
+    function initModule4() {
+      const container = document.getElementById('mod4-container');
+      container.innerHTML = '';
+
+      mod4Data.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-6 rounded-2xl border border-purple-500/20 space-y-3';
+        card.innerHTML = `
+          <div class="text-xs font-semibold text-purple-300 uppercase tracking-widest">Collocation ${index + 1} of 6</div>
+          <p class="text-sm font-bold text-white">${item.prompt}</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            ${item.opts.map((o, oIdx) => `
+              <button onclick="checkMod4(${index}, ${oIdx}, this)" class="m4-btn-${index} w-full py-2 px-3 rounded-xl glass-card border border-purple-500/30 text-xs font-bold hover:border-halloween-orange transition text-gray-200">
+                ${o}
+              </button>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function checkMod4(qIdx, selected, btn) {
+      playSound('click');
+      const buttons = document.querySelectorAll(`.m4-btn-${qIdx}`);
+      buttons.forEach(b => b.disabled = true);
+
+      if (selected === mod4Data[qIdx].ans) {
+        playSound('success');
+        btn.className = 'w-full py-2 px-3 rounded-xl border-2 border-halloween-green bg-halloween-green/20 text-halloween-green font-bold text-xs';
+        mod4Score++;
+        if (mod4Score === mod4Data.length) addXP(100, 'mod4');
+      } else {
+        playSound('error');
+        btn.className = 'w-full py-2 px-3 rounded-xl border-2 border-red-500 bg-red-500/20 text-red-200 font-bold text-xs';
+        buttons[mod4Data[qIdx].ans].className = 'w-full py-2 px-3 rounded-xl border-2 border-halloween-green bg-halloween-green/20 text-halloween-green font-bold text-xs';
+      }
+    }
+
+    /* ==========================================================================
+       MODULE 5: ERROR IDENTIFICATION & CORRECTION (6 ITEMS)
+       ========================================================================== */
+    const mod5Data = [
+      { orig: "Seldom we have seen such terrifying cyber ghosts.", err: "we have seen", corr: "have we seen", exp: "Inversion after 'Seldom' requires auxiliary preceding subject." },
+      { orig: "It is essential that the system admin is notified immediately.", err: "is notified", corr: "be notified", exp: "Mandative subjunctive requires base form 'be'." },
+      { orig: "Had I known about the curse, I wouldn't enter the vault yesterday.", err: "wouldn't enter", corr: "wouldn't have entered", exp: "Third conditional result clause requires 'would not have entered'." },
+      { orig: "Hardly had the clock struck when did the lights go out.", err: "did the lights go", corr: "the lights went", exp: "'Hardly... when' inverted clause precedes standard clause." },
+      { orig: "What we need are a complete overhaul of the firewall.", err: "are", corr: "is", exp: "Cleft clause 'What we need' takes singular verb 'is'." },
+      { orig: "Despite he was terrified, he entered the catacombs.", err: "Despite he was", corr: "Despite being", exp: "'Despite' must be followed by gerund/noun, not a full subject clause." }
+    ];
+
+    let mod5Solved = 0;
+
+    function initModule5() {
+      const container = document.getElementById('mod5-container');
+      container.innerHTML = '';
+
+      mod5Data.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-6 rounded-2xl border border-purple-500/20 space-y-3';
+        card.innerHTML = `
+          <div class="text-xs font-semibold text-purple-300 uppercase tracking-widest">Sentence ${index + 1} of 6</div>
+          <p class="text-sm font-bold text-white">"${item.orig}"</p>
+          <p class="text-xs text-gray-400">Target Error Segment: <span class="text-halloween-orange font-bold">${item.err}</span></p>
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <input type="text" id="mod5-in-${index}" placeholder="Type correction..." class="px-3 py-2 rounded-lg bg-black/60 border border-purple-500/40 text-sm text-white focus:outline-none focus:border-halloween-orange w-64">
+            <button onclick="checkMod5(${index})" class="px-4 py-2 bg-halloween-purple text-white font-bold text-xs rounded-lg hover:bg-purple-600 transition">Correct Error</button>
+          </div>
+          <div id="mod5-fb-${index}" class="text-xs font-bold"></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function checkMod5(idx) {
+      playSound('click');
+      const val = document.getElementById(`mod5-in-${idx}`).value.trim().toLowerCase();
+      const fb = document.getElementById(`mod5-fb-${idx}`);
+      const target = mod5Data[idx].corr.toLowerCase();
+
+      if (val === target) {
+        playSound('success');
+        fb.textContent = `CORRECT! Rule: ${mod5Data[idx].exp}`;
+        fb.className = "text-xs font-bold text-halloween-green";
+        document.getElementById(`mod5-in-${idx}`).disabled = true;
+        mod5Solved++;
+        if (mod5Solved === mod5Data.length) addXP(100, 'mod5');
+      } else {
+        playSound('error');
+        fb.textContent = `INCORRECT. Correction: "${mod5Data[idx].corr}"`;
+        fb.className = "text-xs font-bold text-red-400";
+      }
+    }
+
+    /* ==========================================================================
+       MODULE 6: SUBJUNCTIVE MOOD & CLEFT SENTENCES (6 ITEMS)
+       ========================================================================== */
+    const mod6Data = [
+      { prompt: "It is imperative that every developer ______ (update) their security patch before Halloween.", opts: ["updates", "update", "updated", "has updated"], ans: 1, exp: "Subjunctive mood uses base verb form 'update'." },
+      { prompt: "______ it not for the ancient talisman, the cyber ghost would have taken over.", opts: ["Were", "Had", "Was", "If"], ans: 0, exp: "Inverted conditional subjunctive 'Were it not for...'." },
+      { prompt: "What surprised the investigators most ______ the total absence of biometric logs.", opts: ["was", "were", "are", "have been"], ans: 0, exp: "Wh-cleft sentence with singular clause takes 'was'." },
+      { prompt: "It was only after midnight ______ the phantom signal reached its peak.", opts: ["when", "that", "than", "which"], ans: 1, exp: "It-cleft structure uses 'It was... that...'." },
+      { prompt: "The council demanded that the haunted AI server ______ (decommission) immediately.", opts: ["is decommissioned", "be decommissioned", "was decommissioned", "has been decommissioned"], ans: 1, exp: "Passive subjunctive 'be decommissioned'." },
+      { prompt: "All that we need ______ a secure encrypted channel.", opts: ["are", "is", "were", "be"], ans: 1, exp: "Cleft focus 'All that we need' takes singular 'is'." }
+    ];
+
+    let mod6Score = 0;
+
+    function initModule6() {
+      const container = document.getElementById('mod6-container');
+      container.innerHTML = '';
+
+      mod6Data.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-6 rounded-2xl border border-purple-500/20 space-y-3';
+        card.innerHTML = `
+          <div class="text-xs font-semibold text-purple-300 uppercase tracking-widest">Question ${index + 1} of 6</div>
+          <p class="text-sm font-bold text-white">${item.prompt}</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            ${item.opts.map((o, oIdx) => `
+              <button onclick="checkMod6(${index}, ${oIdx}, this)" class="m6-btn-${index} w-full py-2 px-3 rounded-xl glass-card border border-purple-500/30 text-xs font-bold hover:border-halloween-green transition text-gray-200">
+                ${o}
+              </button>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function checkMod6(qIdx, selected, btn) {
+      playSound('click');
+      const buttons = document.querySelectorAll(`.m6-btn-${qIdx}`);
+      buttons.forEach(b => b.disabled = true);
+
+      if (selected === mod6Data[qIdx].ans) {
+        playSound('success');
+        btn.className = 'w-full py-2 px-3 rounded-xl border-2 border-halloween-green bg-halloween-green/20 text-halloween-green font-bold text-xs';
+        mod6Score++;
+        if (mod6Score === mod6Data.length) addXP(100, 'mod6');
+      } else {
+        playSound('error');
+        btn.className = 'w-full py-2 px-3 rounded-xl border-2 border-red-500 bg-red-500/20 text-red-200 font-bold text-xs';
+        buttons[mod6Data[qIdx].ans].className = 'w-full py-2 px-3 rounded-xl border-2 border-halloween-green bg-halloween-green/20 text-halloween-green font-bold text-xs';
+      }
+    }
+
+    /* ==========================================================================
+       MODULE 7: CRYPTIC LEXICAL RIDDLES (5 ITEMS)
+       ========================================================================== */
+    const mod7Data = [
+      { riddle: "I am a remarkable, supernatural appearance of a person or ghost. (10 letters)", ans: "apparition", hint: "Starts with 'APP...'" },
+      { riddle: "A sequence of real or imaginary images like those seen in a dream or feverish state. (14 letters)", ans: "phantasmagoria", hint: "Starts with 'PHAN...'" },
+      { riddle: "Strange and frightening in an uncanny or mysterious way. (5 letters)", ans: "eerie", hint: "Starts with 'E...'" },
+      { riddle: "Relating to or resembling a ghost or phantom spectrum. (8 letters)", ans: "spectral", hint: "Starts with 'SPEC...'" },
+      { riddle: "Relating to a tomb or interment; gloomy, dismal. (10 letters)", ans: "sepulchral", hint: "Starts with 'SEP...'" }
+    ];
+
+    let mod7Solved = 0;
+
+    function initModule7() {
+      const container = document.getElementById('mod7-container');
+      container.innerHTML = '';
+
+      mod7Data.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-6 rounded-2xl border border-halloween-green/30 flex flex-col justify-between space-y-4';
+        card.innerHTML = `
+          <div class="space-y-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-halloween-green">Terminal Riddle 0${index + 1}</span>
+            <p class="text-xs text-gray-300 leading-relaxed italic bg-black/40 p-3 rounded-lg border border-purple-500/20">${item.riddle}</p>
+          </div>
+          <div class="space-y-3 pt-2">
+            <div class="text-xs text-purple-300 font-semibold">Hint: ${item.hint}</div>
+            <div class="flex gap-2">
+              <input type="text" id="mod7-in-${index}" placeholder="Type C1 term..." class="w-full px-3 py-2 rounded-lg bg-black/60 border border-purple-500/40 text-xs text-white focus:outline-none focus:border-halloween-green uppercase font-mono">
+              <button onclick="checkMod7(${index})" class="px-4 py-2 bg-halloween-green text-black font-bold text-xs rounded-lg hover:bg-emerald-400 transition">Decrypt</button>
+            </div>
+            <div id="mod7-fb-${index}" class="text-xs font-bold min-h-[1rem]"></div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function checkMod7(idx) {
+      playSound('click');
+      const val = document.getElementById(`mod7-in-${idx}`).value.trim().toLowerCase();
+      const fb = document.getElementById(`mod7-fb-${idx}`);
+      if (val === mod7Data[idx].ans) {
+        playSound('success');
+        fb.textContent = "DECRYPTED!";
+        fb.className = "text-xs font-bold text-halloween-green";
+        document.getElementById(`mod7-in-${idx}`).disabled = true;
+        mod7Solved++;
+        if (mod7Solved === mod7Data.length) addXP(100, 'mod7');
+      } else {
+        playSound('error');
+        fb.textContent = "INCORRECT KEY";
+        fb.className = "text-xs font-bold text-red-400";
+      }
+    }
+
+    /* ==========================================================================
+       MODULE 8: AUDITORY DISTINCTIONS & STRESS (5 ITEMS)
+       ========================================================================== */
+    const mod8Data = [
+      {
+        sound: "audioTone1",
+        label: "Ascending Frequency Cue",
+        prompt: "Which syllable carries primary stress in the formal word 'Macabre'?",
+        opts: ["First syllable (/ˈmæk/)", "Second syllable (/məˈkɑːbrə/ or /məˈkɑːb/)", "Equal stress", "Unstressed"],
+        ans: 1
+      },
+      {
+        sound: "audioTone2",
+        label: "Descending Spectral Buzz",
+        prompt: "In C1 phonetics, where is the primary stress in 'Phantasmagoria'?",
+        opts: ["phan-TAS-ma-goria", "phantas-ma-GOR-ia", "PHAN-tasmagoria", "phantasmago-RIA"],
+        ans: 1
+      },
+      {
+        sound: "audioTone1",
+        label: "Resonant Pulse",
+        prompt: "Identify the subtle distinction: 'He spoke WITH eerie calm' vs 'He spoke IN eerie calm'. Which preposition implies state rather than manner?",
+        opts: ["WITH implies manner", "IN implies internal state", "Both are identical", "Neither is grammatically valid"],
+        ans: 1
+      },
+      {
+        sound: "audioTone2",
+        label: "Low Synthesizer Hum",
+        prompt: "Which word has a silent letter in British C1 pronunciation: 'Ghost', 'Ghastly', or 'Ghoulish'?",
+        opts: ["Only Ghost", "Ghost and Ghastly ('h' is silent in all)", "Only Ghoulish", "None"],
+        ans: 1
+      },
+      {
+        sound: "audioTone1",
+        label: "High Frequency Pitch",
+        prompt: "Analyze vocal stress: 'I didn't say she stole the talisman.' Stress on 'SHE' implies:",
+        opts: ["Someone else stole it", "I said it yesterday", "She bought it", "Nothing was stolen"],
+        ans: 0
+      }
+    ];
+
+    let mod8Score = 0;
+
+    function initModule8() {
+      const container = document.getElementById('mod8-container');
+      container.innerHTML = '';
+
+      mod8Data.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-6 rounded-2xl border border-purple-500/20 space-y-4';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-widest text-halloween-purple">Auditory Item 0${index + 1}</span>
+            <button onclick="playSound('${item.sound}')" class="px-3 py-1.5 rounded-lg bg-halloween-purple/30 border border-halloween-purple text-xs font-bold text-purple-200 hover:bg-halloween-purple transition flex items-center gap-2">
+              <span>🔊</span> Play Cue (${item.label})
+            </button>
+          </div>
+          <p class="text-sm font-bold text-white">${item.prompt}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            ${item.opts.map((o, oIdx) => `
+              <button onclick="checkMod8(${index}, ${oIdx}, this)" class="m8-btn-${index} w-full text-left p-3 rounded-xl glass-card border border-purple-500/30 text-xs font-semibold text-gray-200 hover:border-halloween-orange transition">
+                ${o}
+              </button>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function checkMod8(qIdx, selected, btn) {
+      playSound('click');
+      const buttons = document.querySelectorAll(`.m8-btn-${qIdx}`);
+      buttons.forEach(b => b.disabled = true);
+
+      if (selected === mod8Data[qIdx].ans) {
+        playSound('success');
+        btn.className = 'w-full text-left p-3 rounded-xl border-2 border-halloween-green bg-halloween-green/20 text-halloween-green font-bold text-xs';
+        mod8Score++;
+        if (mod8Score === mod8Data.length) addXP(100, 'mod8');
+      } else {
+        playSound('error');
+        btn.className = 'w-full text-left p-3 rounded-xl border-2 border-red-500 bg-red-500/20 text-red-200 font-bold text-xs';
+        buttons[mod8Data[qIdx].ans].className = 'w-full text-left p-3 rounded-xl border-2 border-halloween-green bg-halloween-green/20 text-halloween-green font-bold text-xs';
+      }
+    }
+
+    /* ==========================================================================
+       MODULE 9: ETHICAL DEBATE CARDS (5 ITEMS)
+       ========================================================================== */
+    const mod9Data = [
+      { topic: "AI Author Resurrection", prompt: "AI can generate novel horror stories in the exact voice of deceased authors like Poe. Is this creative tribute or cultural sacrilege?", q: ["Should IP law extend posthumously?", "Does it suppress original modern writers?"] },
+      { topic: "Biometric VR Fear Systems", prompt: "VR terror houses adapt in real-time to heart rate and panic. Where should developers draw ethical limits?", q: ["Should emotional AI manipulation be regulated?", "How do we safeguard user privacy?"] },
+      { topic: "Digital Afterlife Avatars", prompt: "Companies offer persistent conversational avatars of passed relatives for Halloween reunions. Is this healthy or harmful?", q: ["How does this alter human grief?", "Is commercializing memory ethical?"] },
+      { topic: "Autonomous Cyber Security", prompt: "Autonomous defense algorithms can proactively destroy suspected hacker infrastructure. Is preemptive action justified?", q: ["What about collateral digital damage?", "Who holds accountability?"] },
+      { topic: "Synthetic Memory Implantation", prompt: "Futuristic haunted houses temporarily implant thrilling artificial scary memories into visitors' minds. Safe thrill or hazard?", q: ["Does it threaten personal identity?", "Could it cause lasting trauma?"] }
+    ];
+
+    function initModule9() {
+      const container = document.getElementById('mod9-container');
+      container.innerHTML = '';
+
+      mod9Data.forEach((item, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'perspective-1000 h-80 w-full cursor-pointer';
+        wrapper.onclick = (e) => {
+          if (e.target.tagName !== 'BUTTON') {
+            playSound('click');
+            wrapper.querySelector('.card-inner').classList.toggle('rotate-y-180');
+            addXP(20, 'mod9_step_' + index);
+            if (index === 4) addXP(100, 'mod9');
+          }
+        };
+
+        wrapper.innerHTML = `
+          <div class="card-inner relative w-full h-full transform-style-3d transition-transform duration-700">
+            <div class="absolute inset-0 w-full h-full glass-card border border-halloween-orange/40 rounded-2xl p-6 flex flex-col justify-between backface-hidden">
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold uppercase tracking-widest text-halloween-orange">Ethics Card 0${index + 1}</span>
+                  <span class="text-xs text-purple-300">Flip 🔄</span>
+                </div>
+                <h4 class="text-xl font-bold text-white font-spooky">${item.topic}</h4>
+                <p class="text-xs text-gray-300 leading-relaxed">${item.prompt}</p>
+              </div>
+              <div class="text-xs text-purple-400 font-semibold">💬 Click card to open debate angles</div>
+            </div>
+
+            <div class="absolute inset-0 w-full h-full glass-card border border-halloween-purple bg-halloween-dark rounded-2xl p-6 flex flex-col justify-between backface-hidden rotate-y-180">
+              <div class="space-y-3">
+                <span class="text-xs font-bold uppercase tracking-widest text-halloween-purple">C1 Discussion Angles</span>
+                <ul class="space-y-2 text-xs text-gray-200 list-disc list-inside">
+                  ${item.q.map(q => `<li>${q}</li>`).join('')}
+                </ul>
+              </div>
+              <div class="text-xs text-halloween-orange font-bold border-t border-purple-500/20 pt-2">
+                Challenge: Speak 2 minutes with C1 connectors!
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(wrapper);
+      });
+    }
+
+    let timerInterval = null;
+    let secondsLeft = 120;
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+      const secs = (secondsLeft % 60).toString().padStart(2, '0');
+      document.getElementById('timer-display').textContent = `${mins}:${secs}`;
+    }
+
+    function startTimer() {
+      playSound('click');
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (secondsLeft > 0) {
+          secondsLeft--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          playSound('success');
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      playSound('click');
+      if (timerInterval) clearInterval(timerInterval);
+      secondsLeft = 120;
+      updateTimerDisplay();
+    }
+
+    /* ==========================================================================
+       MODULE 10: HALLOWEEN C1 CROSSWORD PUZZLE (6 CLUES)
+       ========================================================================== */
+    const mod10Data = [
+      { num: 1, clue: "Disturbing and horrific because of involvement with death.", ans: "MACABRE" },
+      { num: 2, clue: "Strange, eerie, and unnatural in a terrifying way.", ans: "UNCANNY" },
+      { num: 3, clue: "A ghost, phantom, or remarkable supernatural appearance.", ans: "APPARITION" },
+      { num: 4, clue: "A discreditable or embarrassing secret stored away.", ans: "SKELETON" },
+      { num: 5, clue: "To completely wipe out or eradicate a threat.", ans: "ANNIHILATE" },
+      { num: 6, clue: "Grim, horrifying, and gruesome in detail.", ans: "GRISLY" }
+    ];
+
+    let mod10Solved = 0;
+
+    function initModule10() {
+      const container = document.getElementById('mod10-container');
+      container.innerHTML = `
+        <div class="space-y-4">
+          <h4 class="text-sm font-bold uppercase tracking-wider text-halloween-orange">C1 Crossword Clues</h4>
+          <div class="space-y-3" id="mod10-clues"></div>
+        </div>
+        <div class="glass-card p-6 rounded-2xl border border-purple-500/20 space-y-4">
+          <h4 class="text-sm font-bold uppercase tracking-wider text-halloween-purple">Interactive Solution Matrix</h4>
+          <div class="space-y-3" id="mod10-inputs"></div>
+        </div>
+      `;
+
+      const cluesContainer = document.getElementById('mod10-clues');
+      const inputsContainer = document.getElementById('mod10-inputs');
+
+      mod10Data.forEach((item, index) => {
+        const clueEl = document.createElement('div');
+        clueEl.className = "text-xs text-gray-300 leading-snug p-3 rounded-lg glass-card border border-purple-500/20";
+        clueEl.innerHTML = `<strong class="text-halloween-orange">${item.num}.</strong> ${item.clue} (${item.ans.length} letters)`;
+        cluesContainer.appendChild(clueEl);
+
+        const inputEl = document.createElement('div');
+        inputEl.className = "flex items-center gap-3";
+        inputEl.innerHTML = `
+          <span class="text-xs font-bold text-purple-300 w-6">${item.num}.</span>
+          <input type="text" id="mod10-in-${index}" maxlength="${item.ans.length}" placeholder="${item.ans.length} LETTERS" class="px-3 py-2 rounded-lg bg-black/60 border border-purple-500/40 text-xs text-white uppercase font-mono tracking-widest focus:outline-none focus:border-halloween-orange w-48">
+          <button onclick="checkMod10(${index})" class="px-3 py-2 bg-halloween-orange text-black font-bold text-xs rounded-lg hover:bg-orange-400 transition">Verify</button>
+          <span id="mod10-fb-${index}" class="text-xs font-bold"></span>
+        `;
+        inputsContainer.appendChild(inputEl);
+      });
+    }
+
+    function checkMod10(idx) {
+      playSound('click');
+      const val = document.getElementById(`mod10-in-${idx}`).value.trim().toUpperCase();
+      const fb = document.getElementById(`mod10-fb-${idx}`);
+      if (val === mod10Data[idx].ans) {
+        playSound('success');
+        fb.textContent = "✓ CORRECT";
+        fb.className = "text-xs font-bold text-halloween-green";
+        document.getElementById(`mod10-in-${idx}`).disabled = true;
+        mod10Solved++;
+        if (mod10Solved === mod10Data.length) addXP(100, 'mod10');
+      } else {
+        playSound('error');
+        fb.textContent = "✗ TRY AGAIN";
+        fb.className = "text-xs font-bold text-red-400";
+      }
+    }
+
+    /* ==========================================================================
+       VICTORY MODAL & PARTICLES CANVAS
+       ========================================================================== */
+    function triggerVictory() {
+      playSound('success');
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 150,
+          spread: 90,
+          origin: { y: 0.6 },
+          colors: ['#FF6B00', '#9d4edd', '#00ff88']
+        });
+      }
+
+      const modal = document.getElementById('congrats-modal');
+      const card = document.getElementById('modal-card');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-90');
+      card.classList.add('scale-100');
+    }
+
+    function closeModal() {
+      playSound('click');
+      const modal = document.getElementById('congrats-modal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function initParticles() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particles = [];
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 2.5 + 0.5,
+          color: Math.random() > 0.5 ? '#FF6B00' : '#9d4edd',
+          alpha: Math.random() * 0.6 + 0.2,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: -Math.random() * 0.5 - 0.2
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y < 0) p.y = height;
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.alpha;
+          ctx.fill();
+        });
+        requestAnimationFrame(render);
+      }
+      render();
+    }
+
+    /* INITIALIZATION */
+    window.onload = function () {
+      initParticles();
+      initModule1();
+      initModule2();
+      initModule3();
+      initModule4();
+      initModule5();
+      initModule6();
+      initModule7();
+      initModule8();
+      initModule9();
+      initModule10();
+      updateProgressUI();
+    };
+  </script>
+</body>
+</html>
